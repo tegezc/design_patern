@@ -47,17 +47,17 @@ interfaces, not their implementations.
 
 
 ## Participants
-1 AbstractFactory (WidgetFactory)
+1. AbstractFactory (WidgetFactory)
 * declares an interface for operations that create abstract product objects.
-2 ConcreteFactory (MotifWidgetFactory, PMWidgetFactory)
+2. ConcreteFactory (MotifWidgetFactory, PMWidgetFactory)
 * implements the operations to create concrete product objects.
-3 AbstractProduct (Window, ScrollBar)
+3. AbstractProduct (Window, ScrollBar)
 * declares an interface for a type of product object.
-4 ConcreteProduct (MotifWindow, MotifScrollBar)
+4. ConcreteProduct (MotifWindow, MotifScrollBar)
 * defines a product object to be created by the corresponding concrete
 factory.
 * implements the AbstractProduct interface.
-5 Client
+5. Client
 * uses only interfaces declared by AbstractFactory and AbstractProduct
 classes.
 
