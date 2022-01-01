@@ -119,3 +119,54 @@ factory stores the prototypes to be cloned in a dictionary called partCatalog.
 The method make: retrieves the prototype and clones it:
 >make: partName
 >  ^ (partCatalog at: partName) copy
+
+The concrete factory has a method for adding parts to the catalog.
+> addPart: partTemplate named: partName
+> partCatalog at: partName put: partTemplate
+
+Prototypes are added to the factory by identifying them with a symbol:
+> aFactory addPart: aPrototype named: #ACMEWidget
+
+A variation on the Prototype-based approach is possible in languages that treat
+classes as first-class objects (Smalltalk and Objective C, for example). You can
+think of a class in these languages as a degenerate factory that creates only one
+kind of product. You can store classes inside a concrete factory that create the
+various concrete products in variables, much like prototypes. These classes
+create new instances on behalf of the concrete factory. You define a new factory
+by initializing an instance of a concrete factory with classes of products rather
+than by subclassing. This approach takes advantage of language characteristics,
+whereas the pure Prototype-based approach is language-independent.
+Like the Prototype-based factory in Smalltalk just discussed, the class-based
+version will have a single instance variable partCatalog, which is a dictionary
+whose key is the name of the part. Instead of storing prototypes to be cloned,
+partCatalog stores the classes of the products. The method make: now looks
+like this:
+> make: partName
+> ^ (partCatalog at: partName) new
+
+3. Defining extensible factories. AbstractFactory usually defines a different
+operation for each kind of product it can produce. The kinds of products are
+encoded in the operation signatures. Adding a new kind of product requires
+changing the AbstractFactory interface and all the classes that depend on it.
+
+A more flexible but less safe design is to add a parameter to operations that
+create objects. This parameter specifies the kind of object to be created. It could
+be a class identifier, an integer, a string, or anything else that identifies the kind
+of product. In fact with this approach, AbstractFactory only needs a single
+"Make" operation with a parameter indicating the kind of object to create. This
+is the technique used in the Prototype- and the class-based abstract factories
+discussed earlier.
+This variation is easier to use in a dynamically typed language like Smalltalk
+than in a statically typed language like C++. You can use it in C++ only when
+all objects have the same abstract base class or when the product objects can be
+safely coerced to the correct type by the client that requested them. The
+implementation section of Factory Method (107) shows how to implement such
+parameterized operations in C++.
+But even when no coercion is needed, an inherent problem remains: All products
+are returned to the client with the same abstract interface as given by the return
+type. The client will not be able to differentiate or make safe assumptions about
+the class of a product. If clients need to perform subclass-specific operations,
+they won't be accessible through the abstract interface. Although the client could
+perform a downcast (e.g., with dynamic_cast in C++), that's not always feasible
+or safe, because the downcast can fail. This is the classic trade-off for a highly
+flexible and extensible interface.
